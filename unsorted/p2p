@@ -28,3 +28,9 @@ fi
 
 scp "$img" $ssh_name:/tmp/display.png 1>/dev/null 2>/dev/null
 ssh $ssh_name "killall fbi; fbi -a --noedit -d /dev/fb0 -T 1 --noverbose /tmp/display.png" 1>/dev/null 2>/dev/null
+
+# if the history directory exists, save a timestamp prefixed copy of the image
+if [ -d "$HOME/p2p-history" ]; then
+    filename="$(date -u +%FT%H%M%S | tr -d '-')"
+    cp $img "$HOME/p2p-history/$filename-$(basename $img)"
+fi
