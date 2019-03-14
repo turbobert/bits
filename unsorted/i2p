@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# install fbi on the pi
+
+ssh_name=paper
+img="$1"
+
+if [ ! -z "$2" ]; then
+    ssh_name="$2"
+fi
+
+if [ -z "$1" ]; then
+    echo "$0 IMAGEFILE SSHCONFIGNAME"
+    exit 0
+fi
+
+if [ "$1" = "screen" ]; then
+    rm -f /tmp/display.png 1>/dev/null 2>/dev/null
+    screencapture -i /tmp/display.png 1>/dev/null 2>/dev/null
+    img=/tmp/display.png
+fi
+
+if [ "$1" = "main" ]; then
+    rm -f /tmp/display.png 1>/dev/null 2>/dev/null
+    screencapture -m /tmp/display.png 1>/dev/null 2>/dev/null
+    img=/tmp/display.png
+fi
+
+scp "$img" $ssh_name:/tmp/display.png 1>/dev/null 2>/dev/null
+ssh $ssh_name "killall fbi; fbi -a --noedit -d /dev/fb0 -T 1 --noverbose /tmp/display.png" 1>/dev/null 2>/dev/null
