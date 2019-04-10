@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# debian disk tool
+
+# ddt raw find -- list all files
+# ddt raw get -- list all files
+
+if [[ "$1" = "raw" ]]; then
+
+fi
