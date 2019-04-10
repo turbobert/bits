@@ -2,9 +2,31 @@
 
 # debian disk tool
 
-# ddt raw find -- list all files
-# ddt raw get -- list all files
+# ddt <FILENAME> raw find 1 -- list all files in p<1>
+# ddt <FILENAME> raw get -- list all files
 
-if [[ "$1" = "raw" ]]; then
 
+say() {
+    echo "$(date -u) $0: $1" 1>&2
+}
+
+DISKFILE=$1
+DISKMODE=$2
+PART=$3
+COMMAND=$4
+shift 4
+
+D=$(mktemp -d -p /tmp DDT-XXXXXXXXXX)
+
+if [[ "$DISKMODE" = "raw" ]]; then
+
+    qemu-nbd --connect /dev/nbd0 -f raw $DISKFILE 1>&2
+    say "Wait device settle..."
+    #sleep 3 1>&2
+    mount /dev/nbd0p$PART $D 1>&2
+    if [[ "$COMMAND" = "pass" ]]; then
+        ( cd $D; "$@" )
+    fi
+    umount $D 1>&2
+    qemu-nbd --disconnect /dev/nbd0 1>&2
 fi
