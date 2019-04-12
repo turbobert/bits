@@ -7,22 +7,36 @@ cleanstart:
 	make all
 
 all: ${SRC:.md=.html}
-	cat ${SRC:.md=.html} >index.html
+	#cat ${SRC:.md=.html} >index.html
 
 clean:
 	rm -f *html
 
+one:
+	make clean
+	rm -f index.md
+	cat *.md >index.md
+	make index.html
+
 ifeq ($(OS),Darwin)
 %.html: %.md
-	pandoc -N -f markdown_github -t html -o $@ $<
-	echo '<html><head><style type="text/css">p,pre,li { line-height: 1.5; } p,h1,h2,h3,h4,h5,h6,li { font-family: sans-serif; } pre { padding: 5px; margin: 10px; background: beige; overflow: auto; } body { width: 1200px; margin: 0px; padding: 10px; }</style></head><body>' >full_$@
+	@echo " ======= BEGIN: $@ ========================================"
+	pandoc --self-contained -N -f markdown_github -t html -o $@ $<
+	tail -c +`egrep -b -e '^<body>$$' $@ | cut -d ':' -f 1` $@ >$@.tmp
+	cat $@.tmp | grep -v "<body>" >$@
+	rm -f $@.tmp
+	echo '<html><head><style type="text/css">p,pre,li { line-height: 1.5; } p,h1,h2,h3,h4,h5,h6,li { font-family: sans-serif; } pre { padding: 5px; margin: 10px; background: beige; overflow: auto; } body { width: 1200px; margin: 0px; padding: 10px; margin-left: 50px; }</style></head><body>' >full_$@
 	cat $@ >>full_$@
 	sed -i "" 's|\</pre\>|\</pre\>\<input style="position: relative; top: -5px; float: right; " type=button value="Block into Clipboard" onclick="navigator.clipboard.writeText(this.previousSibling.textContent);"/\>|g' full_$@
 	cat full_$@ >$@
 	rm -f full_$@
+	@echo " ======= END: $@ ========================================"
 else
 %.html: %.md
-	pandoc -N -f markdown_github -t html -o $@ $<
+	pandoc --self-contained -N -f markdown_github -t html -o $@ $<
+	tail -c +`egrep -b -e '^<body>$$' $@ | cut -d ':' -f 1` $@ >$@.tmp
+	cat $@.tmp | grep -v "<body>" >$@
+	rm -f $@.tmp
 	echo '<html><head><style type="text/css">p,pre,li { line-height: 1.5; } p,h1,h2,h3,h4,h5,h6,li { font-family: sans-serif; } pre { padding: 5px; margin: 10px; background: beige; overflow: auto; } body { width: 1200px; margin: 0px; padding: 10px; }</style></head><body>' >full_$@
 	cat $@ >>full_$@
 	sed -i 's|</pre>|</pre><input style="position: relative; top: -5px; float: right; " type=button value="Block into Clipboard" onclick="navigator.clipboard.writeText(this.previousSibling.textContent);"/>|g' full_$@
