@@ -1,0 +1,21 @@
+#!/bin/bash
+
+T=/dev/tty0
+
+if [[ "$1" = "cl" ]]; then
+    setterm --clear all >$T
+fi
+
+if [[ "$1" = "fl" ]]; then
+    setterm --clear all >$T
+    sleep 0.2
+    setterm --background red >$T
+    sleep 0.2
+    setterm --clear all >$T
+    sleep 0.2
+    sleep 0.5
+    setterm --reset >$T
+    sleep 0.2
+    setterm --clear all >$T
+    sleep 0.2
+fi
