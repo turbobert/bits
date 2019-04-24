@@ -32,3 +32,13 @@ EOF
     sleep 2.5
     $0 cl
 fi
+
+if [[ "$1" = "fi" ]]; then
+    $0 cl
+    setterm --background black >$T
+    setterm --foreground white >$T
+    setterm --clear all >$T
+    figlet >$T
+    sleep 2.5
+    $0 cl
+fi
