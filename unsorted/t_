@@ -20,7 +20,7 @@ fi
 if [[ "$1" = "s" ]]; then
     $0 cl
     setterm --background black >$T
-    setterm --foreground yellow >$T
+    setterm --foreground white >$T
     cat >$T <<EOF
 
 
