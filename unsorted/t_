@@ -19,8 +19,14 @@ fi
 
 if [[ "$1" = "s" ]]; then
     $0 cl
-    setterm --background red >$T
-    setterm --foreground white >$T
+    setterm --background black >$T
+    setterm --foreground yellow >$T
+    cat >$T <<EOF
+
+
+
+
+EOF
     setterm --clear all >$T
     /usr/games/cowsay -f dragon "$2" >$T
     sleep 2.5
