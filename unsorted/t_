@@ -5,17 +5,20 @@ T=/dev/tty0
 if [[ "$1" = "cl" ]]; then
     setterm --reset >$T
     setterm --cursor off >$T
+    setterm --blank 0 >$T
     setterm --clear all >$T
 fi
 
 if [[ "$1" = "fl" ]]; then
     setterm --reset >$T
     setterm --cursor off >$T
+    setterm --blank 0 >$T
     setterm --clear all >$T
     setterm --background red >$T
     setterm --clear all >$T
     sleep 0.5
     setterm --reset >$T
     setterm --cursor off >$T
+    setterm --blank 0 >$T
     setterm --clear all >$T
 fi
