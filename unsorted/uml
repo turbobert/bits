@@ -1,0 +1,24 @@
+#!/bin/bash
+
+
+if [[ -z $1 ]]; then
+    $0 *.uml
+    exit 0
+fi
+
+#for p in ttxt tpng tsvg; do
+for f in "$@"; do
+    (
+        echo "@startuml"
+        echo "skinparam monochrome true"
+        echo "skinparam dpi 100"
+        cat "$f"
+        echo "@enduml"
+        ) | plantuml -progress -tpng -p >$f.png
+#    (
+#        echo "@startuml"
+#        echo "skinparam monochrome true"
+#        cat "$f"
+#        echo "@enduml"
+#        ) | plantuml -progress -ttxt -p >$f.txt
+done
