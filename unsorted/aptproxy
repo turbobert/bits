@@ -1,0 +1,1 @@
+ssh eh1 "echo 'Acquire::http::proxy \"http://192.168.5.114:3128\";' >/etc/apt/apt.conf.d/80proxy"
