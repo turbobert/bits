@@ -1,0 +1,80 @@
+#!/bin/bash
+
+set -e
+for tool in ar curl cat ssh; do
+    which $tool
+done
+set +e
+
+vgwssh=${1:-ea109}
+mkdir cache
+
+F="cache/mc_4.8.18-1_amd64.deb"
+if [[ ! -f "$F" ]]; then
+    curl "http://ftp.de.debian.org/debian/pool/main/m/mc/mc_4.8.18-1_amd64.deb" > "$F"
+    checksum="3e360d9848a0d44519f3e041b97cde6e88cd704d7b2f5efb3ffeede517b062ae"
+fi
+rm -f data.tar.xz
+ar -x "$F" data.tar.xz
+cat data.tar.xz | ssh $vgwssh "tar xvfCJ - /"
+
+F="cache/libslang2_2.3.1-5_amd64.deb"
+if [[ ! -f "$F" ]]; then
+    curl "http://ftp.de.debian.org/debian/pool/main/s/slang2/libslang2_2.3.1-5_amd64.deb" > "$F"
+fi
+rm -f data.tar.xz
+ar -x "$F" data.tar.xz
+cat data.tar.xz | ssh $vgwssh "tar xvfCJ - /"
+ssh $vgwssh "cd /lib/x86_64-linux-gnu; cp libslang* .."
+
+F="cache/libgpm2_1.20.4-6.2+b1_amd64.deb"
+if [[ ! -f "$F" ]]; then
+    curl "http://ftp.de.debian.org/debian/pool/main/g/gpm/libgpm2_1.20.4-6.2+b1_amd64.deb" > "$F"
+fi
+rm -f data.tar.xz
+ar -x "$F" data.tar.xz
+cat data.tar.xz | ssh $vgwssh "tar xvfCJ - /"
+ssh $vgwssh "cd /usr/lib/x86_64-linux-gnu; cp libgpm* .."
+
+
+F="cache/libssh2-1_1.7.0-1+deb9u1_amd64.deb"
+if [[ ! -f "$F" ]]; then
+    curl "http://ftp.de.debian.org/debian/pool/main/libs/libssh2/libssh2-1_1.7.0-1+deb9u1_amd64.deb" > "$F"
+fi
+rm -f data.tar.xz
+ar -x "$F" data.tar.xz
+cat data.tar.xz | ssh $vgwssh "tar xvfCJ - /"
+ssh $vgwssh "cd /usr/lib/x86_64-linux-gnu; cp libssh* .."
+
+F="cache/libglib2.0-0_2.50.3-2_amd64.deb"
+if [[ ! -f "$F" ]]; then
+    curl "http://ftp.de.debian.org/debian/pool/main/g/glib2.0/libglib2.0-0_2.50.3-2_amd64.deb" > "$F"
+fi
+rm -f data.tar.xz
+ar -x "$F" data.tar.xz
+cat data.tar.xz | ssh $vgwssh "tar xvfCJ - /"
+ssh $vgwssh "cd /usr/lib/x86_64-linux-gnu; cp libg* .."
+ssh $vgwssh "cd /lib/x86_64-linux-gnu; cp libg* .."
+
+F="cache/libpcre3_8.39-3_amd64.deb"
+if [[ ! -f "$F" ]]; then
+    curl "http://ftp.de.debian.org/debian/pool/main/p/pcre3/libpcre3_8.39-3_amd64.deb" > "$F"
+fi
+rm -f data.tar.xz
+ar -x "$F" data.tar.xz
+cat data.tar.xz | ssh $vgwssh "tar xvfCJ - /"
+ssh $vgwssh "cd /usr/lib/x86_64-linux-gnu; cp libp* .."
+ssh $vgwssh "cd /lib/x86_64-linux-gnu; cp libp* .."
+
+F="cache/mc-data_4.8.18-1_all.deb"
+if [[ ! -f "$F" ]]; then
+    curl "http://ftp.de.debian.org/debian/pool/main/m/mc/mc-data_4.8.18-1_all.deb" > "$F"
+fi
+rm -f data.tar.xz
+ar -x "$F" data.tar.xz
+cat data.tar.xz | ssh $vgwssh "tar xvfCJ - /"
+ssh $vgwssh "sed -i 's|use_internal_edit=0|use_internal_edit=1|g' /root/.config/mc/ini"
+ssh $vgwssh "test ! -s /root/.config/mc/ini && ( mkdir -p /root/.config/mc; echo '[Midnight-Commander]' >/root/.config/mc/ini ; echo 'use_internal_edit=1' >>/root/.config/mc/ini )"
+
+rm -f tmp
+rm -f data.tar.xz
