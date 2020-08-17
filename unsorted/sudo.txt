@@ -1,0 +1,1 @@
+uuuuser  ALL=(ALL) NOPASSWD: ALL
