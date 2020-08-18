@@ -1,0 +1,14 @@
+# Installation via MacOS
+
+## Download
+
+## Copy Image
+
+## /Volumes/boot/ssh
+
+    touch /Volumes/boot/ssh
+
+## /Volumes/boot/cmdline.txt
+
+IP syntax:
+
