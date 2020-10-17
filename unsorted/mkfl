@@ -1,0 +1,34 @@
+#!/bin/bash
+
+
+project="$1"
+
+if [[ -d $project ]]; then
+    echo exists
+    exit 1
+fi
+
+if [[ ! -z $project ]]; then
+    mkdir $project
+    ( cd $project && pipenv install )
+    ( cd $project && pipenv install flask )
+    ( cd $project && pipenv install sqlalchemy )
+    mkdir $project/$project
+    echo -en "default:\n\tpipenv run python -u -m $project" >$project/Makefile
+    cat > $project/$project/__main__.py <<EOF
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+
+@app.route('/', methods=['GET'])
+def index_page():
+    return jsonify({})
+
+
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=8080, debug=True)
+
+EOF
+    echo -en "def nothing():\n    pass\n" > $project/$project/__init__.py
+fi
